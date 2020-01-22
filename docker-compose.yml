@@ -1,0 +1,43 @@
+version: '3'
+
+volumes:
+        redis-data:
+        postgres-data:
+
+services:
+  redis:
+    image: redis:5.0.7
+    restart: always
+    volumes:
+      - "redis-data:/data"
+    networks:
+        - factures
+
+  postgres:
+    image: postgres:12.1
+    restart: always
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data"
+    env_file: docker-compose.env
+
+  node:
+    build: https://framagit.org/factures/node-backend.git
+    restart: always
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - factures
+
+  frontend:
+    build: https://framagit.org/factures/angular-frontend.git
+    restart: always
+    ports:
+      - "4200"
+    depends_on:
+      - node
+    networks:
+      - factures
+
+networks:
+  factures:
