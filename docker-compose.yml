@@ -33,7 +33,7 @@ services:
     build: https://framagit.org/factures/angular-frontend.git
     restart: always
     ports:
-      - "4200"
+      - "50000:80"
     depends_on:
       - node
     networks:
